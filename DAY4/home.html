@@ -1,0 +1,56 @@
+<!doctype html> 
+
+<html>
+<head>
+    <title>Labyrinthe</title>
+    <style>
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            justify-items: center;
+            gap: 1em;
+        }
+
+        .buttons > div {
+            display: flex;
+            gap: 1em;
+            margin: 0 auto;
+        }
+
+        .buttons button {
+            padding: 1em;
+            font-weight: bold;
+            background: none;
+            border: 2px solid black;
+            border-radius: 5px;
+        }
+
+        .buttons button:hover {
+            background: rgba(0, 0, 0, .25);
+        }
+
+        .buttons button:active {
+            background: rgba(0, 0, 0, .5);
+        }
+    </style>
+</head>
+<body>
+    <h1>Day 4 : Labyrinthe</h1>
+
+    <div id="laby"></div>
+
+    <input type="button" value="GO" onclick="afficheLaby();"><br/><BR><BR>
+
+    <div class="buttons">
+        <div><button id="up">Up</button></div>
+        <div>
+            <button id="left">Left</button>
+            <button id="down">Down</button>
+            <button id="right">Right</button>
+        </div>
+    </div>
+    
+    <script language="JavaScript" src="script.js"></script>
+
+</body>
+</html>
