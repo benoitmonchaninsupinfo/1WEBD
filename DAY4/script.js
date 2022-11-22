@@ -1,12 +1,19 @@
-m = "m"; //représente un mur
-p = "p"; //représente le personnage
-b = "b"; //représente le chemin
-f = "f"; //représente le trophée
+const m = "m"; //représente un mur
+const p = "p"; //représente le personnage
+const b = "b"; //représente le chemin
+const f = "f"; //représente le trophée
 
-xperso = 1; //position initial du personnage sur l'axe X
-yperso = 1; //postition initial du personnage sur l'axe Y
+const defaultXPerso = 1; //position initial du personnage sur l'axe X
+const defaultYPerso = 1; //postition initial du personnage sur l'axe Y
+
+let xperso = defaultXPerso;
+let yperso = defaultYPerso;
+
+let xTrophy = 9;
+let yTrophy = 5;
+
 //tableau à double entrée représentant votre labyrinthe, vous pouvez le modifier pour comprendre le fonctionnement
-var laby = [
+const laby = [
   [m, m, m, m, m, m, m, m, m, m],
   [m, p, m, b, b, b, b, b, b, m],
   [m, b, m, b, m, m, m, b, m, m],
@@ -15,6 +22,11 @@ var laby = [
   [m, b, m, b, m, b, b, b, b, f],
   [m, m, m, m, m, m, m, m, m, m],
 ];
+
+const UP = document.getElementById('up');
+const LEFT = document.getElementById('left');
+const DOWN = document.getElementById('down');
+const RIGHT = document.getElementById('right');
 
 function afficheLaby() {
   const leLaby = document.getElementById("laby");
@@ -71,6 +83,10 @@ function moveP(direction) {
         yperso = y;
         afficheLaby();
     }
+
+    if (xperso === xTrophy && yperso === yTrophy) {
+        finish();
+    }
 }
 
 function moveUp() {
@@ -93,18 +109,50 @@ function canGo(x, y) {
     return laby[y][x] !== m;
 }
 
-const UP = document.getElementById('up');
-const LEFT = document.getElementById('left');
-const DOWN = document.getElementById('down');
-const RIGHT = document.getElementById('right');
-
-UP.addEventListener('click', moveUp);
-LEFT.addEventListener('click', moveLeft);
-DOWN.addEventListener('click', moveDown);
-RIGHT.addEventListener('click', moveRight);
-
-document.addEventListener('keyup', handleKeyUp);
-
 function handleKeyUp(event) {
-    console.log(event.key);
+    switch(event.key) {
+        case "ArrowUp":
+            moveUp();
+            break;
+        case "ArrowLeft":
+            moveLeft();
+            break;
+        case "ArrowDown":
+            moveDown();
+            break;
+        case "ArrowRight":
+            moveRight();
+    }
+}
+
+function start() {
+    laby[yperso][xperso] = b;
+    laby[defaultYPerso][defaultXPerso] = p;
+    laby[yTrophy][xTrophy] = f;
+    xperso = defaultXPerso;
+    yperso = defaultYPerso;
+    afficheLaby();
+    addEventListeners();
+}
+
+function finish() {
+    removeEventListeners();
+    setTimeout(() => alert('Vous avez gagné, bien joué !'), 10);
+}
+
+function addEventListeners() {
+    removeEventListeners();
+    UP.addEventListener('click', moveUp);
+    LEFT.addEventListener('click', moveLeft);
+    DOWN.addEventListener('click', moveDown);
+    RIGHT.addEventListener('click', moveRight);
+    document.addEventListener('keyup', handleKeyUp);
+}
+
+function removeEventListeners() {
+    UP.removeEventListener('click', moveUp);
+    LEFT.removeEventListener('click', moveLeft);
+    DOWN.removeEventListener('click', moveDown);
+    RIGHT.removeEventListener('click', moveRight);
+    document.removeEventListener('keyup', handleKeyUp);
 }
