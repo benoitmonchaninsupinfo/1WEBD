@@ -12,6 +12,9 @@ let yperso = defaultYPerso;
 let xTrophy = 9;
 let yTrophy = 5;
 
+let timer;
+let time = 0;
+
 //tableau à double entrée représentant votre labyrinthe, vous pouvez le modifier pour comprendre le fonctionnement
 const laby = [
   [m, m, m, m, m, m, m, m, m, m],
@@ -23,19 +26,20 @@ const laby = [
   [m, m, m, m, m, m, m, m, m, m],
 ];
 
+const leLaby = document.getElementById("laby");
+
 const UP = document.getElementById('up');
 const LEFT = document.getElementById('left');
 const DOWN = document.getElementById('down');
 const RIGHT = document.getElementById('right');
 
 function afficheLaby() {
-  const leLaby = document.getElementById("laby");
   let insertion = "<table border=0 cellspacing=0 cellpadding=0>";
 
   for (i = 0; i < laby.length; i++) {
     insertion += "<tr>";
     for (j = 0; j < laby[i].length; j++) {
-      insertion += "<td>";
+      insertion += `<td id="${i}_${j}">`;
       switch(laby[i][j]) {
         case m:
             insertion += "<img width='52'height='52' src='Assets/stonewall.png'>";
@@ -77,11 +81,7 @@ function moveP(direction) {
     }
 
     if (canGo(x, y)) {
-        laby[y][x] = p;
-        laby[yperso][xperso] = b;
-        xperso = x;
-        yperso = y;
-        afficheLaby();
+        moveTo(x, y);
     }
 
     if (xperso === xTrophy && yperso === yTrophy) {
@@ -125,6 +125,27 @@ function handleKeyUp(event) {
     }
 }
 
+function handleLabyClick(event) {
+    let elementRef;
+    if (event.target.nodeName === 'IMG') {
+        elementRef = event.target.parentNode;
+    } else {
+        elementRef = event.target;
+    }
+    const [y, x] = elementRef.id.split('_');
+    if (canGo(x, y)) {
+        moveTo(x, y);
+    }
+}
+
+function moveTo(x, y) {
+    laby[y][x] = p;
+    laby[yperso][xperso] = b;
+    xperso = x;
+    yperso = y;
+    afficheLaby();
+}
+
 function start() {
     laby[yperso][xperso] = b;
     laby[defaultYPerso][defaultXPerso] = p;
@@ -133,11 +154,14 @@ function start() {
     yperso = defaultYPerso;
     afficheLaby();
     addEventListeners();
+    time = 0;
+    timer = setInterval(() => incrementTime(), 1000);
 }
 
 function finish() {
     removeEventListeners();
-    setTimeout(() => alert('Vous avez gagné, bien joué !'), 10);
+    clearInterval(timer);
+    setTimeout(() => alert('Vous avez gagné, bien joué ! Vous avez mit ' + time + ' secondes à terminer le labyrinthe'), 10);
 }
 
 function addEventListeners() {
@@ -147,6 +171,7 @@ function addEventListeners() {
     DOWN.addEventListener('click', moveDown);
     RIGHT.addEventListener('click', moveRight);
     document.addEventListener('keyup', handleKeyUp);
+    leLaby.addEventListener('click', handleLabyClick);
 }
 
 function removeEventListeners() {
@@ -155,4 +180,18 @@ function removeEventListeners() {
     DOWN.removeEventListener('click', moveDown);
     RIGHT.removeEventListener('click', moveRight);
     document.removeEventListener('keyup', handleKeyUp);
+    leLaby.removeEventListener('click', handleLabyClick);
+}
+
+function incrementTime() {
+    time++;
+    document.getElementById('timer').innerText = formatTime(time);
+}
+
+function formatTime(secs) {
+    let minutes = secs > 60 ? parseInt(secs / 60) : 0;
+    minutes = minutes > 9 ? minutes : '0' + minutes;
+    let seconds = parseInt(secs % 60);
+    seconds = seconds > 9 ? seconds : '0' + seconds;
+    return `${minutes}:${seconds}`;
 }
