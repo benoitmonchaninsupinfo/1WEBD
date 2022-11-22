@@ -1,5 +1,5 @@
 /**
- * Exercice 2.7
+ * Exercice 2.8
  * Faire une zone en début de page WEB pour placer la date et l’heure de visite
 */
 
