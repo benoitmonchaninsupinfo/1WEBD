@@ -95,28 +95,34 @@ function addToHistory(x, y, result, operator) {
 
 function initHistoryDatabase() {
     const OPERATIONS_HISTORY_DB_NAME = 'operations_history';
-    let db;
+
     const openRequest = indexedDB.open('db');
 
     openRequest.onupgradeneeded = () => {
         console.warn('Mise à jour requise');
-        db = openRequest.result;
+        const db = openRequest.result;
 
         if (!db.objectStoreNames.contains(OPERATIONS_HISTORY_DB_NAME)) {
             db.createObjectStore(OPERATIONS_HISTORY_DB_NAME, { keyPath: 'id' });
         }
     }
 
-    openRequest.onerror = () => {
-        console.error(openRequest.error);
-    }
+    return new Promise((resolve, reject) => {
+        openRequest.onsuccess = () => {
+            console.log('La connexion avec la base de données est ok !');
+            resolve(openRequest.result);
+        }
 
-    openRequest.onsuccess = () => {
-        console.log('La connexion avec la base de données est ok !');
-    }
-
-    return db;
+        openRequest.onerror = () => {
+            console.error('La connexion à la base de données ne s est pas bien passée');
+            reject(openRequest.error);
+        }
+    });
 
 }
 
-const database = initHistoryDatabase();
+initHistoryDatabase().then((database) => {
+    console.log(database);
+}).catch((error) => {
+    console.error(error);
+});
