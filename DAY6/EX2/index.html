@@ -17,8 +17,13 @@
     <button id="buttonDiv">Div (/)</button>
     <button id="buttonModulo">Modulo (%)</button>
     <h3>Resultat : <span id="result"></span></h3>
-    <h3>Historique :</h3><!-- On a ajouté le bloc pour l'historique -->
-    <table id="history"></table>
+
+    <div class="history" style="display: none">
+        <h3>Historique :</h3><!-- On a ajouté le bloc pour l'historique -->
+        <table id="history"></table>
+    </div>
+    <button id="show-history" disabled>Afficher l'historique</button>
+    <button id="clear-history" disabled>Effacer l'historique</button>
 
     <script src="script.js"></script>
 </body>
